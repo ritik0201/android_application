@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">FitTrack</string>
+    <string name="shortcut_quick_workout_short">Quick Workout</string>
+    <string name="shortcut_quick_workout_long">Start Quick Workout</string>
+    <string name="shortcut_log_water_short">Log Water</string>
+    <string name="shortcut_log_water_long">Quick Log Water</string>
 </resources>

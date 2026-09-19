@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="start_quick_workout"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/shortcut_quick_workout_short"
+        android:shortcutLongLabel="@string/shortcut_quick_workout_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.example.myapplication"
+            android:targetClass="com.example.myapplication.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="log_water"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/shortcut_log_water_short"
+        android:shortcutLongLabel="@string/shortcut_log_water_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.example.myapplication"
+            android:targetClass="com.example.myapplication.MainActivity" />
+    </shortcut>
+</shortcuts>
