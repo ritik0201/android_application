@@ -8,7 +8,7 @@
         android:shortcutLongLabel="@string/shortcut_quick_workout_long">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="com.example.myapplication"
+            android:targetPackage="com.fittrack.gymtracker"
             android:targetClass="com.example.myapplication.MainActivity" />
     </shortcut>
     <shortcut
@@ -19,7 +19,7 @@
         android:shortcutLongLabel="@string/shortcut_log_water_long">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="com.example.myapplication"
+            android:targetPackage="com.fittrack.gymtracker"
             android:targetClass="com.example.myapplication.MainActivity" />
     </shortcut>
 </shortcuts>
