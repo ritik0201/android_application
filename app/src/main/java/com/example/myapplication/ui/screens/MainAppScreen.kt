@@ -19,6 +19,7 @@ import com.example.myapplication.data.entity.UserProfile
 import com.example.myapplication.navigation.Screen
 import com.example.myapplication.ui.components.BottomNavigationBar
 import com.example.myapplication.ui.theme.Motion
+import com.example.myapplication.viewmodel.ActiveWorkoutViewModel
 import com.example.myapplication.viewmodel.MainViewModel
 import com.example.myapplication.viewmodel.ProgressViewModel
 
@@ -30,6 +31,7 @@ import com.example.myapplication.viewmodel.ProgressViewModel
 fun MainAppScreen(
     userProfile: UserProfile?,
     mainViewModel: MainViewModel = viewModel(),
+    activeWorkoutViewModel: ActiveWorkoutViewModel = viewModel(),
     progressViewModel: ProgressViewModel = viewModel()
 ) {
     val navController = rememberNavController()
@@ -67,10 +69,20 @@ fun MainAppScreen(
                     userProfile = userProfile,
                     workoutPlans = workoutPlans,
                     workoutSessions = workoutSessions,
-                    latestMeasurement = bodyMeasurements.lastOrNull()
+                    latestMeasurement = bodyMeasurements.lastOrNull(),
+                    onStartWorkout = { planWithEx ->
+                        activeWorkoutViewModel.startWorkoutFromPlan(planWithEx)
+                        navController.navigate(Screen.Workouts.route)
+                    },
+                    onStartEmptyWorkout = {
+                        activeWorkoutViewModel.startEmptyWorkout()
+                        navController.navigate(Screen.Workouts.route)
+                    }
                 )
             }
-            composable(Screen.Workouts.route) { WorkoutsScreen() }
+            composable(Screen.Workouts.route) {
+                WorkoutsScreen(activeWorkoutViewModel = activeWorkoutViewModel)
+            }
             composable(Screen.Progress.route) { ProgressScreen() }
             composable(Screen.Nutrition.route) { NutritionScreen() }
             composable(Screen.Settings.route) { SettingsScreen() }

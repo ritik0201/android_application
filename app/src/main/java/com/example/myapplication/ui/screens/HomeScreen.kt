@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,7 +36,9 @@ fun HomeScreen(
     userProfile: UserProfile?,
     workoutPlans: List<WorkoutPlanWithExercises> = emptyList(),
     workoutSessions: List<WorkoutSessionWithSets> = emptyList(),
-    latestMeasurement: BodyMeasurement? = null
+    latestMeasurement: BodyMeasurement? = null,
+    onStartWorkout: (WorkoutPlanWithExercises) -> Unit = {},
+    onStartEmptyWorkout: () -> Unit = {}
 ) {
     val todayName = LocalDate.now().dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
 
@@ -128,26 +131,49 @@ fun HomeScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     if (todayPlans.isEmpty()) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            PulsingDumbbellAnimation(size = 40.dp)
-                            Text(
-                                text = "Rest Day / No workout scheduled for $todayName.",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                PulsingDumbbellAnimation(size = 40.dp)
+                                Text(
+                                    text = "Rest Day / No workout scheduled for $todayName.",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                            Button(
+                                onClick = onStartEmptyWorkout,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(Icons.Default.PlayArrow, contentDescription = null)
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("Start Quick / Free Workout")
+                            }
                         }
                     } else {
                         todayPlans.forEach { planWithEx ->
-                            Text(
-                                text = planWithEx.plan.title,
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = planWithEx.plan.title,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Button(onClick = { onStartWorkout(planWithEx) }) {
+                                    Icon(Icons.Default.PlayArrow, contentDescription = null)
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text("Start")
+                                }
+                            }
                             if (planWithEx.exercises.isNotEmpty()) {
                                 Spacer(modifier = Modifier.height(4.dp))
                                 LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
