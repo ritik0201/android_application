@@ -10,6 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.ui.components.animations.AnimatedFlameAnimation
+import com.example.myapplication.ui.components.animations.BmiGaugeAnimation
+import com.example.myapplication.ui.components.animations.ConfettiBurstAnimation
+import com.example.myapplication.ui.components.animations.PulsingDumbbellAnimation
 import com.example.myapplication.viewmodel.CalculatorsViewModel
 
 @Composable
@@ -44,13 +48,18 @@ fun BmiCalculatorTab(viewModel: CalculatorsViewModel) {
     var weightText by remember { mutableStateOf("") }
     val result by viewModel.bmiResult.collectAsState()
 
+    val parsedBmi = result?.substringAfter("BMI: ")?.substringBefore(" ")?.toFloatOrNull() ?: 22f
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        BmiGaugeAnimation(bmiValue = parsedBmi, size = 110.dp)
+
         Text("Body Mass Index (BMI) Calculator", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         OutlinedTextField(value = heightText, onValueChange = { heightText = it }, label = { Text("Height (cm)") }, modifier = Modifier.fillMaxWidth())
         OutlinedTextField(value = weightText, onValueChange = { weightText = it }, label = { Text("Weight (kg)") }, modifier = Modifier.fillMaxWidth())
@@ -60,8 +69,11 @@ fun BmiCalculatorTab(viewModel: CalculatorsViewModel) {
         }
 
         result?.let {
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Text(it, modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+            ) {
+                Text(it, modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onPrimaryContainer)
             }
         }
     }
@@ -88,19 +100,22 @@ fun TdeeCalculatorTab(viewModel: CalculatorsViewModel) {
             .fillMaxSize()
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        AnimatedFlameAnimation(size = 60.dp)
+
         Text("Daily Calorie Needs (TDEE) Calculator", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         OutlinedTextField(value = ageText, onValueChange = { ageText = it }, label = { Text("Age") }, modifier = Modifier.fillMaxWidth())
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            FilterChip(selected = gender == "Male", onClick = { gender = "Male" }, label = { Text("Male") })
-            FilterChip(selected = gender == "Female", onClick = { gender = "Female" }, label = { Text("Female") })
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FilterChip(selected = gender == "Male", onClick = { gender = "Male" }, label = { Text("Male") }, modifier = Modifier.weight(1f))
+            FilterChip(selected = gender == "Female", onClick = { gender = "Female" }, label = { Text("Female") }, modifier = Modifier.weight(1f))
         }
         OutlinedTextField(value = heightText, onValueChange = { heightText = it }, label = { Text("Height (cm)") }, modifier = Modifier.fillMaxWidth())
         OutlinedTextField(value = weightText, onValueChange = { weightText = it }, label = { Text("Weight (kg)") }, modifier = Modifier.fillMaxWidth())
 
-        Text("Activity Level:", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-        Column {
+        Text("Activity Level:", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, modifier = Modifier.fillMaxWidth())
+        Column(modifier = Modifier.fillMaxWidth()) {
             activityLevels.forEach { act ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(selected = selectedActivity == act, onClick = { selectedActivity = act })
@@ -117,8 +132,11 @@ fun TdeeCalculatorTab(viewModel: CalculatorsViewModel) {
         }
 
         result?.let {
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Text(it, modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
+            ) {
+                Text(it, modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onTertiaryContainer)
             }
         }
     }
@@ -135,8 +153,16 @@ fun OneRmCalculatorTab(viewModel: CalculatorsViewModel) {
             .fillMaxSize()
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        Box(contentAlignment = Alignment.Center) {
+            PulsingDumbbellAnimation(size = 80.dp)
+            if (result != null) {
+                ConfettiBurstAnimation(modifier = Modifier.size(150.dp))
+            }
+        }
+
         Text("One-Rep Max (1RM) Strength Calculator", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         OutlinedTextField(value = weightText, onValueChange = { weightText = it }, label = { Text("Weight Lifted (kg)") }, modifier = Modifier.fillMaxWidth())
         OutlinedTextField(value = repsText, onValueChange = { repsText = it }, label = { Text("Reps Performed") }, modifier = Modifier.fillMaxWidth())
@@ -146,8 +172,11 @@ fun OneRmCalculatorTab(viewModel: CalculatorsViewModel) {
         }
 
         result?.let {
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Text(it, modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+            ) {
+                Text(it, modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSecondaryContainer)
             }
         }
     }
